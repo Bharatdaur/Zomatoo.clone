@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Zomatoo 🍴</title>
+  <style>
+    /* RESET */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { 
+      font-family: 'Segoe UI', sans-serif;
+      background: #e23744; /* set solid red as background */
+      /* background:linear-gradient(135deg, #e23744 0%, #ffb3b3 100%); */
+      color:#222; 
+      line-height:1.6; 
+    }
+
+    /* NAVBAR */
+    header {
+      position:fixed; top:0; left:0; width:100%;
+      background:
+        linear-gradient(rgba(255,255,255,0.92), rgba(255,255,255,0.92)),
+        url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+      /* added background photo to navbar */
+      display:flex; justify-content:space-between; align-items:center;
+      padding:1rem 2rem; z-index:1000;
+      backdrop-filter: blur(10px);
+    }
+    header h1 { color:#e23744; font-size:1.5rem; font-weight:700; }
+    nav ul { display:flex; gap:1.5rem; list-style:none; }
+    nav a { text-decoration:none; color:#333; font-weight:500; transition:0.3s; }
+    nav a:hover { color:#e23744; }
+    .order-now-btn {
+      background: #e23744;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 1rem 2.2rem;
+      font-size: 1.2rem;
+      font-weight: 700;
+      position: fixed;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      box-shadow: 0 4px 18px rgba(226,55,68,0.18);
+      cursor: pointer;
+      z-index: 2000;
+      transition: background 0.2s, color 0.2s;
+    }
+    .order-now-btn:hover {
+      background: #c41f32;
+      color: #fff;
+    }
+
+    /* HERO */
+    .hero {
+      height:40vh;
+      display:flex; flex-direction:column; justify-content:center; align-items:center;
+      background:
+        url('https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=1200&q=80') center/cover no-repeat;
+      /* removed gradient, added food restaurant background image */
+      text-align:center; padding:2rem;
+      position:relative;
+      z-index:1;
+    }
+    .hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: rgba(255,255,255,0.7);
+      z-index: 2;
+      pointer-events: none;
+    }
+    .hero > * {
+      position: relative;
+      z-index: 3;
+    }
+
+    /* Improved Search Bar */
+    .search-box {
+      display:flex;
+      background:#fff;
+      border-radius:50px;
+      overflow:hidden;
+      margin-top:1.5rem;
+      box-shadow:0 4px 15px rgba(0,0,0,0.1);
+      width:100%;
+      max-width:700px; /* increased from 500px */
+      align-items:center;
+      transition:box-shadow 0.2s;
+    }
+    .search-box input {
+      border:none;
+      padding:1rem 1.2rem;
+      flex:1;
+      font-size:1rem;
+      outline:none;
+      background:transparent;
+    }
+    .search-box button, .search-box .login-btn, .search-box .signup-btn {
+      border:none;
+      cursor:pointer;
+      font-size:1rem;
+      padding:0.9rem 1.5rem;
+      font-weight:600;
+      transition:background 0.3s, color 0.3s;
+      border-radius:50px;
+      margin-left:0.5rem;
+    }
+    .search-box button {
+      background:#e23744;
+      color:#fff;
+    }
+    .search-box button:hover {
+      background:#c41f32;
+    }
+    .search-box .login-btn {
+      background:#fff;
+      color:#e23744;
+      border:1.5px solid #e23744;
+    }
+    .search-box .login-btn:hover {
+      background:#e23744;
+      color:#fff;
+    }
+    .search-box .signup-btn {
+      background:#e23744;
+      color:#fff;
+      border:1.5px solid #e23744;
+    }
+    .search-box .signup-btn:hover {
+      background:#fff;
+      color:#e23744;
+    }
+
+    /* CATEGORY SECTION */
+    .categories { padding:5rem 2rem; max-width:1200px; margin:auto; }
+    .categories h3 { text-align:center; font-size:2rem; margin-bottom:2rem; }
+    .cards {
+      display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:1.5rem;
+    }
+    .card {
+      background:#fff; border-radius:20px; overflow:hidden; box-shadow:0 6px 20px rgba(0,0,0,0.08);
+      transition:transform 0.3s ease, box-shadow 0.3s ease; opacity:0; transform:translateY(40px);
+    }
+    .card img { width:100%; height:180px; object-fit:cover; }
+    .card h4 { padding:1rem; font-size:1.2rem; }
+    .card:hover { transform:translateY(-10px) scale(1.03); box-shadow:0 8px 25px rgba(0,0,0,0.12); }
+
+    /* FEATURED RESTAURANTS */
+    .featured-restaurants {
+      max-width:1200px;
+      margin:3rem auto;
+      padding:2rem;
+      background:#fff;
+      border-radius:20px;
+      box-shadow:0 6px 20px rgba(0,0,0,0.08);
+    }
+    .featured-restaurants h3 {
+      text-align:center;
+      color:#e23744;
+      font-size:2rem;
+      margin-bottom:2rem;
+    }
+    .restaurant-list {
+      display:grid;
+      grid-template-columns:repeat(auto-fit,minmax(250px,1fr));
+      gap:1.5rem;
+    }
+    .restaurant-card {
+      background:#ffeaea;
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:0 2px 10px rgba(0,0,0,0.07);
+      transition:transform 0.2s, box-shadow 0.2s;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      animation:fadeInDown 0.8s;
+    }
+    .restaurant-card img {
+      width:100%;
+      height:140px;
+      object-fit:cover;
+    }
+    .restaurant-card-body {
+      padding:1rem;
+      width:100%;
+      text-align:center;
+    }
+    .restaurant-card-title {
+      font-size:1.1rem;
+      font-weight:700;
+      color:#e23744;
+      margin-bottom:0.5rem;
+    }
+    .restaurant-card-desc {
+      font-size:0.97rem;
+      color:#444;
+      margin-bottom:0.5rem;
+    }
+    .restaurant-card-rating {
+      color:#fff;
+      background:#e23744;
+      border-radius:12px;
+      padding:0.2rem 0.7rem;
+      font-weight:600;
+      display:inline-block;
+      font-size:0.95rem;
+    }
+
+    /* ENHANCED SEARCH TAB */
+    .search-section {
+      max-width:600px;
+      margin:2rem auto 0 auto;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      background:linear-gradient(120deg, #fff6e0 0%, #ffe0e6 60%, #ffb3b3 100%);
+      /* added gradient background */
+      border-radius:20px;
+      box-shadow:0 4px 15px rgba(0,0,0,0.08);
+      padding:2rem 1rem;
+    }
+    .search-section label {
+      font-size:1.1rem;
+      color:#e23744;
+      margin-bottom:0.7rem;
+      font-weight:600;
+    }
+    .search-section .search-box {
+      width:100%;
+      margin:0;
+    }
+
+    /* ADDITIONAL FOOTER */
+    .footer-extra {
+      background:#e23744;
+      color:#fff;
+      text-align:center;
+      padding:1.2rem 0;
+      font-size:1rem;
+      letter-spacing:1px;
+    }
+
+    /* ANIMATIONS */
+    @keyframes fadeInDown {
+      from { opacity:0; transform:translateY(-30px);}
+      to { opacity:1; transform:translateY(0);}
+    }
+    .show { opacity:1 !important; transform:translateY(0) !important; transition:0.6s ease; }
+
+    /* RESPONSIVE */
+    @media(max-width:900px){
+      .featured-restaurants, .categories { padding:2rem 1vw; }
+      .restaurant-list, .cards { gap:1rem; }
+    }
+    @media(max-width:768px){
+      .hero h2 { font-size:2rem; }
+      nav ul { display:none; }
+    }
+    @media(max-width:600px){
+      .featured-restaurants, .categories { padding:1rem 0.5vw; }
+      .restaurant-list, .cards { grid-template-columns:1fr; }
+      .search-section { padding:1rem 0.5rem; }
+      .search-box { flex-direction:column; gap:0.5rem; max-width:100%; }
+      .search-box button, .search-box .login-btn, .search-box .signup-btn { width:100%; margin-left:0; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <header>
+    <h1>Zomatoo</h1>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Order</a></li>
+        <li><a href="#">Offers</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+      <div style="display:flex;gap:0.5rem;align-items:center;margin-left:1.5rem;">
+        <button type="button" class="login-btn" style="padding:0.5rem 1.2rem;">Login</button>
+        <button type="button" class="signup-btn" style="padding:0.5rem 1.2rem;">Sign Up</button>
+        <!-- Removed Order Now button from navbar -->
+      </div>
+    </nav>
+  </header>
+
+  <!-- ENHANCED SEARCH TAB -->
+  <section class="search-section">
+    <!-- Removed login/signup buttons from here -->
+    <label for="main-search">Find your favorite food or restaurant:</label>
+    <form class="search-box" onsubmit="return false;">
+      <input id="main-search" type="text" placeholder="Search for restaurant, cuisine or a dish..." />
+      <button type="submit">Search</button>
+    </form>
+  </section>
+
+  <!-- HERO -->
+  <section class="hero">
+    <h2>Discover the best food & drinks near you 🍕🥤</h2>
+    <p>From street food to fine dining, find what you crave with Zomatoo.</p>
+  </section>
+
+  <!-- FEATURED RESTAURANTS -->
+  <section class="featured-restaurants">
+    <h3>Featured Restaurants</h3>
+    <div class="restaurant-list">
+      <div class="restaurant-card">
+        <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=600&q=80" alt="Pizza Palace"/>
+        <div class="restaurant-card-body">
+          <div class="restaurant-card-title">Pizza Palace</div>
+          <div class="restaurant-card-desc">Delicious Italian pizzas, pastas & more.</div>
+          <div class="restaurant-card-rating">⭐ 4.5</div>
+        </div>
+      </div>
+      <div class="restaurant-card">
+        <img src="https://images.unsplash.com/photo-1546069901-ba9599a7e63c?auto=format&fit=crop&w=600&q=80" alt="Sushi World"/>
+        <div class="restaurant-card-body">
+          <div class="restaurant-card-title">Sushi World</div>
+          <div class="restaurant-card-desc">Fresh sushi and Japanese cuisine.</div>
+          <div class="restaurant-card-rating">⭐ 4.7</div>
+        </div>
+      </div>
+      <div class="restaurant-card">
+        <img src="https://images.unsplash.com/photo-1550547660-d9450f859349?auto=format&fit=crop&w=600&q=80" alt="Burger Hub"/>
+        <div class="restaurant-card-body">
+          <div class="restaurant-card-title">Burger Hub</div>
+          <div class="restaurant-card-desc">Juicy burgers, fries & shakes.</div>
+          <div class="restaurant-card-rating">⭐ 4.3</div>
+        </div>
+      </div>
+      <div class="restaurant-card">
+        <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?auto=format&fit=crop&w=600&q=80" alt="Tandoori Nights"/>
+        <div class="restaurant-card-body">
+          <div class="restaurant-card-title">Tandoori Nights</div>
+          <div class="restaurant-card-desc">Authentic Indian tandoori & curries.</div>
+          <div class="restaurant-card-rating">⭐ 4.6</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORIES -->
+  <section class="categories">
+    <h3>What's on your mind?</h3>
+    <div class="cards">
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1594007654729-407eedc4be65?auto=format&fit=crop&w=800&q=80" alt="pizza"/>
+        <h4>Pizza</h4>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?auto=format&fit=crop&w=800&q=80" alt="burger"/>
+        <h4>Burger</h4>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1505253758473-96b7015fcd40?auto=format&fit=crop&w=800&q=80" alt="ice cream"/>
+        <h4>Desserts</h4>
+      </div>
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=800&q=80" alt="coffee"/>
+        <h4>Coffee</h4>
+      </div>
+      <div class="card">
+        <img src="https://im.whatshot.in/img/2019/Aug/shutterstock-1381163087-cropped-1565077618.jpg" alt="samosa"/>
+        <h4>Samosa</h4>
+      </div>
+      <div class="card">
+        <img src="https://images.slurrp.com/prod/articles/1m5e86yy5vl.webp" alt="gulab jamun"/>
+        <h4>Gulab Jamun</h4>
+      </div>
+      <div class="card">
+        <img src="https://tse3.mm.bing.net/th/id/OIP.MnrXjdptqYXHTkNWJ-aYWgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3" alt="paneer tikka"/>
+        <h4>Paneer Tikka</h4>
+      </div>
+      <div class="card">
+        <img src="https://tse4.mm.bing.net/th/id/OIP.jcMvDPzhT6Sibvd-tJeZVAHaEJ?rs=1&pid=ImgDetMain&o=7&rm=3" alt="noodles"/>
+        <h4>Noodles</h4>
+      </div>
+      <div class="card">
+        <img src="https://static.vecteezy.com/system/resources/previews/024/677/423/non_2x/keeping-of-ice-cream-flavor-whit-unused-blueberry-strawberry-kiwi-lemon-vanilla-setup-on-common-foundation-creative-resource-ai-generated-photo.jpeg" alt="icecream"/>
+        <h4>Ice Cream</h4>
+      </div>
+      <div class="card">
+        <img src="https://tse1.mm.bing.net/th/id/OIP.9EYoQ8PzfYtsEteUjQDcKwHaHa?pid=ImgDet&w=191&h=191&c=7&o=7&rm=3" alt="cake"/>
+        <h4>Cake</h4>
+      </div>
+      <div class="card">
+        <img src="https://th.bing.com/th/id/OIP.HR8X47jUvNVSNLWbRRwO-wHaE8?o=7rm=3&rs=1&pid=ImgDetMain&o=7&rm=3" alt="mocktails"/>
+        <h4>Mocktails</h4>
+      </div>
+      <!-- New crispy dosa card -->
+      <div class="card">
+        <img src="https://www.bing.com/th/id/OIP.XSCo5S6kP3o-7-jVqH4vGgHaE8?w=219&h=211&c=8&rs=1&qlt=90&o=6&pid=3.1&rm=2" alt="crispy dosa"/>
+        <h4>Crispy Dosa</h4>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <p style="text-align:center;">© 2025 Zomatoo. Made with ❤️ for food lovers.</p>
+  </footer>
+  <div class="footer-extra">
+    <p>Follow us on Instagram | Facebook | Twitter &nbsp; | &nbsp; Contact: support@zomatoo.com</p>
+  </div>
+
+  <!-- JS for Scroll Animations -->
+  <script>
+    const cards = document.querySelectorAll('.card');
+    const revealOnScroll = () => {
+      cards.forEach(card => {
+        const rect = card.getBoundingClientRect();
+        if(rect.top < window.innerHeight - 100){
+          card.classList.add('show');
+        }
+      });
+    };
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+  </script>
+</body>
+</html>
